@@ -1,0 +1,364 @@
+
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #fff;
+}
+
+header {
+padding: 20px;
+color:black;
+}
+
+nav {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.logo a {
+color: #fff;
+text-decoration: none;
+font-weight: bold;
+font-size: 24px;
+}
+
+.menu li {
+display: inline;
+margin-left: 20px;
+}
+
+.menu li a {
+color: #fff;
+text-decoration: none;
+}
+
+
+
+
+.features {
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 40px 0;
+}
+
+.feature {
+text-align: center;
+margin: 0 30px;
+}
+
+.feature i {
+font-size: 48px;
+margin-bottom: 20px;
+color: #333;
+}
+
+footer {
+background-color: #333;
+color: #fff;
+text-align: center;
+padding: 20px;
+}
+
+.logo {
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+
+.logo img {
+width: 40px;
+margin-right: 0.6rem;
+margin-top: -0.6rem;
+}
+
+.logo h3 {
+color: var(--darkTwo);
+font-size: 1.55rem;
+line-height: 1.2;
+font-weight: 700;
+}
+.topimg {
+position: relative;
+overflow: hidden;
+}
+
+.topimg img {
+width: 100%;
+height: 400px;
+}
+
+.search-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.3);
+}
+
+.search-section {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+text-align: center;
+color: #fff;
+z-index: 1;
+}
+
+.search-section h2 {
+font-size: 28px;
+margin-bottom: 20px;
+}
+
+.search-section form {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.search-section input[type="text"] {
+padding: 10px;
+margin-right: 10px;
+border: none;
+border-radius: 4px;
+}
+
+.search-section input[type="submit"] {
+padding: 10px 20px;
+background-color: #333;
+color: #fff;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+.search-section input[type="submit"]:hover {
+background-color: #555;
+}
+.abt-mh {
+  width: 100%;
+  height: 90%;
+}
+
+.abt-mh-heading {
+  width: 96%;
+  text-align: center;
+  color: #000000;
+  font-size: 2.2rem;
+  letter-spacing: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 1%;
+  margin: 1%;
+}
+
+.content-img {
+  width: 100%;
+}
+
+.content-img img {
+  width: 500px;
+  height: 300px;
+  border-radius: 10px;
+}
+
+.abt-mh-content {
+  width: 100%;
+  height: 90%;
+  color: #000000;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+@media (min-width: 992px) {
+  .row {
+    display: flex;
+    align-items: center;
+  }
+
+  .col-lg-6 {
+    flex: 0 0 50%;
+  }
+
+  .abt-mh-content {
+    padding-left: 10px;
+    margin-left: 20px;
+  }
+}
+
+.lets {
+background-color: skyblue;
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 4px;
+box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.lets:hover {
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.lets:active {
+box-shadow: none;
+}
+
+    /* Existing styles */
+    
+    @import url(https://fonts.googleapis.com/css?family=Roboto:300,400);
+    @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css);
+    
+    .testmon {
+        margin-top: 100px;
+    }
+    
+    .testmon h5 {
+        margin-left: 40%;
+        color: goldenrod;
+    }
+    
+    .testmon h3 {
+        margin-left: 37%;
+        font-size: 32px;
+        font-weight: bold;
+    }
+    
+    .testmon p {
+        margin-left: 10%;
+    }
+    
+    .container {
+        display: flex;
+        overflow-x: hidden; /* Hide the overflow */
+        max-width: 100%;
+        position: relative;
+        margin-left: 70px;
+
+    }
+    
+    .card {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        color: #9e9e9e;
+        font-family: 'Roboto', Arial, sans-serif;
+        font-size: 16px;
+        margin: 35px 10px 10px;
+        max-width: 310px;
+        min-width: 250px;
+        position: relative;
+        text-align: center;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 5px;
+        border-top: 5px solid #d2652d;
+    }
+    
+    .card figcaption {
+        padding: 13% 10% 12%;
+    }
+    
+    .card figcaption:before {
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        color: #d2652d;
+        content: "\f10e";
+        font-family: 'FontAwesome';
+        font-size: 32px;
+        font-style: normal;
+        left: 50%;
+        line-height: 60px;
+        position: absolute;
+        top: -30px;
+        width: 60px;
+    }
+    
+    .card h3 {
+        color: #3c3c3c;
+        font-size: 20px;
+        font-weight: 300;
+        line-height: 24px;
+        margin: 10px 0 5px;
+    }
+    
+    .card h4 {
+        font-weight: 400;
+        margin: 0;
+        opacity: 0.5;
+    }
+    
+    .card blockquote {
+        font-style: italic;
+        font-weight: 300;
+        margin: 0 0 20px;
+    }
+    
+    .scroll-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        position: absolute;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 24px;
+        outline: none;
+        cursor: pointer;
+    }
+    
+    .scroll-button-left {
+        left: 0;
+    }
+    
+    .scroll-button-right {
+        right: 0;
+    }
+
+    
+    .scroll-button:focus {
+        box-shadow: 0 0 0 3px rgba(78, 154, 241, 0.5);
+    }
+    
+    .hidden-feedback {
+        display: none;
+    }
+    
+    .show-feedback {
+        display: block;
+    }
+    
+    .testmon h2{
+        margin-left: 45%;
+        width: 100px;
+        height: 10px;
+        background-color: goldenrod;
+    }
+    
+    
+    .futuristic-button {
+        display: flex;
+        flex-direction: row;
+        background-color: #4e9af1;
+        color: #ffffff;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 24px;
+        font-size: 18px;
+        font-weight: bold;
+        outline: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+    
+    .futuristic-button:hover {
+        background-color: #3682d8;
+    }
+    
+    .futuristic-button:focus {
+        box-shadow: 0 0 0 3px rgba(78, 154, 241, 0.5);
+    }   

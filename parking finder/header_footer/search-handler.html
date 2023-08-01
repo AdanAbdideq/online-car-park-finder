@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parking Map</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+    }
+
+    .marker {
+      background-color: #FF0000;
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #FFFFFF;
+      position: relative;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    #current-location-marker {
+      background-color: #00FF00;
+    }
+
+    #desired-location-marker {
+      background-color: #0000FF;
+    }
+
+   
+  .details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .details > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .details label {
+    font-weight: bold;
+  }
+
+  .details input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  .details input[type="text"]:focus {
+    border-color: #007bff;
+  }
+
+  .details button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .details button:hover {
+    background-color: #0056b3;
+  }
+
+  #map {
+    height: 400px;
+    width: 100%;
+  }
+
+  .marker {
+    background-color: #FF0000;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #FFFFFF;
+    position: relative;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  #current-location-marker {
+    background-color: #00FF00;
+  }
+
+  #desired-location-marker {
+    background-color: #0000FF;
+  }
+
+  </style>
+</head>
+<body>
+<div class="details">
+    <div>
+      <label for="current-location">Current Location:</label>
+      <input type="text" id="current-location" placeholder="Enter your current location">
+      <button onclick="handleCurrentLocationChange()">Get Current Location</button>
+    </div>
+    <div>
+      <label for="desired-location">Desired Parking Location:</label>
+      <input type="text" id="desired-location" placeholder="Enter your desired parking location">
+      <button onclick="handleDesiredLocationChange()">Find Nearest Parking</button>
+      <button onclick="getDirections()">Get Directions</button>
+    </div>
+</div>
+  <div id="map"></div>
+  <div id="current-location-marker" class="marker"></div>
+  <div id="desired-location-marker" class="marker"></div>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    let map;
+    let currentLocationMarker;
+    let desiredLocationMarker;
+    let parkingLotMarkers = [];
+
+    function initMap() {
+      // Initialize the map
+      map = L.map('map').setView([0, 0], 12);
+
+      // Add the OpenStreetMap tile layer to the map
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18
+      }).addTo(map);
+
+      // Fetch parking lot data from the PHP file
+      fetch('data.php')
+        .then(response => response.json())
+        .then(data => {
+          const parkingLots = data;
+
+          // Create a marker for each parking lot
+          parkingLots.forEach(parkingLot => {
+            const marker = L.marker([parkingLot.latitude, parkingLot.longitude], {
+              icon: L.icon({
+                iconUrl: 'parking-icon.png', // Update the path to your parking icon image
+                iconSize: [32, 32],
+                iconAnchor: [16, 32]
+              }),
+              title: parkingLot.name,
+              price: parkingLot.price_per_hour
+            });
+
+            marker.on('click', function(e) {
+              const selectedParkingLot = e.target;
+              const parkingLotName = selectedParkingLot.options.title;
+              const parkingLotPrice = selectedParkingLot.options.price;
+
+              // Set the parking lot name in the desired location input box
+              document.getElementById('desired-location').value = parkingLotName;
+
+              // Display parking lot property
+              alert('Parking Lot Name: ' + parkingLotName + '\nPrice: ' + parkingLotPrice);
+            });
+
+            parkingLotMarkers.push(marker);
+            marker.addTo(map);
+          });
+
+          // Fit the map view to the parking lot markers
+          const group = new L.featureGroup(parkingLotMarkers);
+          map.fitBounds(group.getBounds().pad(0.5));
+        })
+        .catch(error => console.error(error));
+    }
+
+    function handleCurrentLocationChange() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const currentLocation = [position.coords.latitude, position.coords.longitude];
+
+            if (currentLocationMarker) {
+              map.removeLayer(currentLocationMarker);
+            }
+
+            currentLocationMarker = L.circleMarker(currentLocation, {
+              radius: 6,
+              color: '#00FF00',
+              fillColor: '#00FF00',
+              fillOpacity: 1
+            }).addTo(map);
+
+            map.setView(currentLocation, map.getZoom());
+            setMarkersVisible(true);
+
+            // Reverse geocode the current location to get its name
+            const geocoder = L.Control.Geocoder.nominatim();
+            geocoder.reverse(currentLocation, 1, (results) => {
+              if (results && results.length > 0) {
+                const currentLocationName = results[0].name;
+                document.getElementById('current-location').value = currentLocationName;
+              }
+            });
+          },
+          error => {
+            console.error(error);
+            alert('Unable to retrieve your current location.');
+          }
+        );
+      } else {
+        alert('Geolocation is not supported by your browser.');
+      }
+    }
+
+    function handleDesiredLocationChange() {
+      const desiredLocationInput = document.getElementById('desired-location');
+      const desiredLocation = desiredLocationInput.value.trim();
+
+      if (!desiredLocation) {
+        alert('Please enter a desired parking location.');
+        return;
+      }
+
+      const geocoder = L.Control.Geocoder.nominatim();
+      geocoder.geocode(desiredLocation, (results) => {
+        if (results && results.length > 0) {
+          const location = results[0].center;
+
+          if (desiredLocationMarker) {
+            map.removeLayer(desiredLocationMarker);
+          }
+
+          desiredLocationMarker = L.circleMarker(location, {
+            radius: 6,
+            color: '#0000FF',
+            fillColor: '#0000FF',
+            fillOpacity: 1
+          }).addTo(map);
+
+          map.setView(location, map.getZoom());
+          setMarkersVisible(true);
+        } else {
+          alert('Unable to geocode the desired parking location.');
+        }
+      });
+    }
+
+    function getDirections() {
+      const currentLocationInput = document.getElementById('current-location');
+      const desiredLocationInput = document.getElementById('desired-location');
+      const currentLocation = currentLocationInput.value.trim();
+      const desiredLocation = desiredLocationInput.value.trim();
+
+      if (!currentLocation || !desiredLocation) {
+        alert('Please enter both current and desired parking locations.');
+        return;
+      }
+
+      const googleMapsURL = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
+        currentLocation
+      )}&destination=${encodeURIComponent(desiredLocation)}`;
+
+      window.open(googleMapsURL, '_blank');
+    }
+
+    function setMarkersVisible(visible) {
+      parkingLotMarkers.forEach(marker => {
+        if (visible) {
+          marker.setOpacity(1);
+        } else {
+          marker.setOpacity(0);
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+  // Retrieve the location value from the URL query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const locationValue = urlParams.get('location');
+
+  // Update the desired location input value
+  const desiredLocationInput = document.getElementById('desired-location');
+  desiredLocationInput.value = locationValue;
+});
+
+
+    // Initialize the map when the DOM is ready
+    document.addEventListener('DOMContentLoaded', initMap);
+  </script>
+</body>
+</html>
